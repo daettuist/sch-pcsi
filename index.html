@@ -837,7 +837,7 @@ let currentPage = 0;
 function showScreen(id) {
   document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
   document.getElementById('screen-' + id).classList.add('active');
-  window.scrollTo(0, 0);
+  document.getElementById('q-body')?.scrollTo(0, 0); window.scrollTo(0, 0);
 }
 
 function selectGrade(g) {
@@ -912,7 +912,7 @@ function prevPage() {
   } else {
     currentPage--;
     renderPage();
-    window.scrollTo(0, 0);
+    document.getElementById('q-body')?.scrollTo(0, 0); window.scrollTo(0, 0);
   }
 }
 
@@ -920,7 +920,7 @@ function nextPage() {
   if (currentPage < 3) {
     currentPage++;
     renderPage();
-    window.scrollTo(0, 0);
+    document.getElementById('q-body')?.scrollTo(0, 0); window.scrollTo(0, 0);
   } else {
     showResults();
   }
