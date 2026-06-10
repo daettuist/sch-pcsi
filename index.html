@@ -2,7 +2,7 @@
 <html lang="ko">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <title>PCSI 나의 소통 스타일 찾기</title>
   <link href="https://fonts.googleapis.com/css2?family=Gaegu:wght@300;400;700&family=Nanum+Pen+Script&display=swap" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
@@ -372,7 +372,7 @@
       font-size: 15px;
     }
     .q-footer {
-      padding: 10px 16px 20px;
+      padding: 10px 16px max(20px, env(safe-area-inset-bottom));
       background: white;
       display: flex; gap: 10px;
     }
