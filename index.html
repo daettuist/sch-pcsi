@@ -695,8 +695,8 @@
     <div class="q-counter" id="q-counter"><strong>0</strong>개 선택됨</div>
   </div>
   <div class="q-footer">
-    <button class="btn-prev" id="btn-prev">← 이전</button>
-    <button class="btn-next" id="btn-next">다음 →</button>
+    <button class="btn-prev" id="btn-prev" onclick="prevPage()">← 이전</button>
+    <button class="btn-next" id="btn-next" onclick="nextPage()">다음 →</button>
   </div>
 </div>
 
@@ -1078,24 +1078,6 @@ function restart() {
   showScreen('start');
 }
 
-// iOS WebKit fix: touchend로 직접 바인딩 (click 이벤트가 삼켜지는 버그 우회)
-(function() {
-  function bindBtn(id, fn) {
-    const el = document.getElementById(id);
-    if (!el) return;
-    // touchend: preventDefault로 이후 click 이벤트 중복 방지
-    el.addEventListener('touchend', function(e) {
-      e.preventDefault();
-      if (!this.disabled) fn.call(this);
-    }, { passive: false });
-    // click: 데스크톱 fallback
-    el.addEventListener('click', function() {
-      if (!this.disabled) fn.call(this);
-    });
-  }
-  bindBtn('btn-next', function() { pressAndGo(this, nextPage); });
-  bindBtn('btn-prev', function() { prevPage(); });
-})();
 
 // 버튼 누름 → 액센트 색 플래시 후 화면 전환 (모바일 즉각 반응)
 function pressAndGo(btn, fn) {
