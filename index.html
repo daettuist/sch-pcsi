@@ -1047,12 +1047,26 @@ function saveAsImage() {
     windowHeight: target.scrollHeight,
     height: target.scrollHeight,
   }).then(canvas => {
-    const link = document.createElement('a');
-    link.download = 'PCSI결과.png';
-    link.href = canvas.toDataURL('image/png');
-    link.click();
-    btn.textContent = '📷 결과 이미지 저장';
-    btn.disabled = false;
+    canvas.toBlob(blob => {
+      const file = new File([blob], 'PCSI결과.png', { type: 'image/png' });
+
+      // 모바일: Web Share API로 앨범 저장 유도
+      if (navigator.canShare && navigator.canShare({ files: [file] })) {
+        navigator.share({ files: [file], title: 'PCSI 나의 소통 스타일 결과' })
+          .catch(() => {});
+      } else {
+        // 데스크톱 or 미지원: 파일 다운로드
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.download = 'PCSI결과.png';
+        link.href = url;
+        link.click();
+        URL.revokeObjectURL(url);
+      }
+
+      btn.textContent = '📷 결과 이미지 저장';
+      btn.disabled = false;
+    }, 'image/png');
   }).catch(() => {
     btn.textContent = '📷 결과 이미지 저장';
     btn.disabled = false;
