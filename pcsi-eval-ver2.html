@@ -1,0 +1,1065 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PCSI 나의 소통 스타일 찾기</title>
+  <link href="https://fonts.googleapis.com/css2?family=Gaegu:wght@300;400;700&family=Nanum+Pen+Script&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --cream: #FFFBF2;
+      --warm-white: #FFFFFF;
+      --ink: #2A2A2A;
+      --ink-light: #6B6B6B;
+      --border: #E8E0D0;
+      --accent: #E8593A;
+      --accent-soft: #FFF0EC;
+      --tag-bg: #F5F0E8;
+    }
+
+    body {
+      font-family: 'Apple SD Gothic Neo', 'Noto Sans KR', 'Malgun Gothic', sans-serif;
+      background: var(--cream);
+      color: var(--ink);
+      min-height: 100vh;
+    }
+
+    .screen { display: none; min-height: 100vh; flex-direction: column; }
+    .screen.active { display: flex; }
+
+    .copyright {
+      text-align: center;
+      font-size: 10px;
+      color: #C0B8A8;
+      padding: 14px 20px 20px;
+      line-height: 1.6;
+      font-family: 'Apple SD Gothic Neo', sans-serif;
+    }
+
+    /* ── 시작 화면 ── */
+    #screen-start {
+      align-items: center;
+      justify-content: center;
+      padding: 64px 32px 44px;
+      background: var(--cream);
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    /* 배경 데코 원 */
+    #screen-start::before {
+      content: '';
+      position: absolute;
+      top: -40px; right: -60px;
+      width: 220px; height: 220px;
+      border-radius: 50%;
+      background: #F9EFD8;
+      pointer-events: none;
+    }
+    #screen-start::after {
+      content: '';
+      position: absolute;
+      bottom: 60px; left: -70px;
+      width: 180px; height: 180px;
+      border-radius: 50%;
+      background: #F2EBF8;
+      pointer-events: none;
+    }
+    .start-sticker {
+      font-size: 56px;
+      margin-bottom: 20px;
+      position: relative; z-index: 1;
+      display: inline-block;
+      animation: bounce 2s ease-in-out infinite;
+    }
+    @keyframes bounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-8px); }
+    }
+    .start-pcsi {
+      font-family: 'Nanum Pen Script', cursive;
+      font-size: 64px; font-weight: 400;
+      color: var(--ink);
+      line-height: 1;
+      margin-bottom: 4px;
+      position: relative; z-index: 1;
+    }
+    .start-tag {
+      display: inline-block;
+      background: var(--ink);
+      color: white;
+      font-family: 'Nanum Pen Script', cursive;
+      font-size: 22px; font-weight: 400;
+      padding: 4px 18px; border-radius: 50px;
+      margin-bottom: 44px;
+      position: relative; z-index: 1;
+      letter-spacing: 0.3px;
+    }
+    .start-card {
+      background: white;
+      border-radius: 20px;
+      padding: 28px 26px;
+      margin-bottom: 36px;
+      box-shadow: 4px 4px 0px #E8E0D0;
+      border: 1.5px solid var(--border);
+      position: relative; z-index: 1;
+      max-width: 340px;
+      text-align: left;
+    }
+    .start-card-label {
+      font-family: 'Nanum Pen Script', cursive;
+      font-size: 20px; color: var(--accent);
+      margin-bottom: 10px;
+    }
+    .start-message {
+      font-family: 'Nanum Pen Script', cursive;
+      font-size: 20px; line-height: 2;
+      color: #444;
+    }
+    .btn-start {
+      background: var(--ink);
+      border: none;
+      color: white;
+      border-radius: 50px;
+      padding: 16px 52px;
+      font-family: 'Gaegu', sans-serif;
+      font-size: 18px; font-weight: 700;
+      cursor: pointer;
+      transition: transform .2s, box-shadow .2s;
+      position: relative; z-index: 1;
+      box-shadow: 3px 3px 0px #999;
+    }
+    .btn-start:hover {
+      background: var(--accent);
+      transform: translate(-1px, -1px);
+      box-shadow: 4px 4px 0px #A83A20;
+    }
+    .btn-start:active {
+      background: var(--accent);
+      transform: translate(1px, 1px);
+      box-shadow: 1px 1px 0px #A83A20;
+    }
+    .copyright-start {
+      position: relative; z-index: 1;
+      margin-top: 32px;
+      font-size: 10px;
+      color: #C0B8A8;
+      line-height: 1.6;
+      font-family: 'Apple SD Gothic Neo', sans-serif;
+    }
+
+    /* ── 공통 헤더 ── */
+    .page-header {
+      background: var(--ink);
+      color: white;
+      padding: 44px 26px 28px;
+      text-align: center;
+    }
+    .page-header-title {
+      font-family: 'Nanum Pen Script', cursive;
+      font-size: 28px; font-weight: 400;
+      margin-bottom: 4px;
+      text-align: center;
+    }
+    .page-header-sub {
+      font-family: 'Apple SD Gothic Neo', 'Noto Sans KR', sans-serif;
+      font-size: 13px; opacity: 0.65;
+    }
+
+    /* ── 정보 입력 화면 ── */
+    #screen-info { background: var(--cream); }
+    .info-body { flex: 1; padding: 28px 22px 8px; overflow-y: auto; }
+    .info-field { margin-bottom: 26px; }
+    .info-label {
+      font-family: 'Nanum Pen Script', cursive;
+      font-size: 22px; color: var(--ink);
+      font-weight: 700;
+      margin-bottom: 10px;
+      display: block;
+    }
+    .info-input {
+      width: 100%;
+      border: 2px solid var(--border);
+      border-radius: 14px;
+      padding: 13px 16px;
+      font-family: 'Apple SD Gothic Neo', 'Noto Sans KR', sans-serif;
+      font-size: 15px;
+      background: white;
+      color: var(--ink);
+      transition: border-color .2s, box-shadow .2s;
+      outline: none;
+      box-shadow: 3px 3px 0px var(--border);
+    }
+    .info-input:focus {
+      border-color: var(--ink);
+      box-shadow: 3px 3px 0px #BBB;
+    }
+    .info-input::placeholder {
+      color: #C8BFA8;
+      font-family: 'Apple SD Gothic Neo', 'Noto Sans KR', sans-serif;
+    }
+    .btn-group { display: flex; flex-wrap: wrap; gap: 8px; }
+    .btn-select {
+      border: 2px solid var(--border);
+      border-radius: 50px;
+      background: white;
+      color: var(--ink-light);
+      font-family: 'Apple SD Gothic Neo', 'Noto Sans KR', sans-serif;
+      font-size: 14px; font-weight: 700;
+      padding: 8px 18px;
+      cursor: pointer;
+      transition: all .15s;
+      box-shadow: 2px 2px 0px var(--border);
+    }
+    .btn-select:hover { border-color: #AAA; color: var(--ink); }
+    .btn-select.selected {
+      background: var(--ink);
+      border-color: var(--ink);
+      color: white;
+      box-shadow: 2px 2px 0px #555;
+    }
+    .btn-group-class .btn-select { padding: 8px 14px; min-width: 52px; text-align: center; }
+    .info-footer { padding: 16px 22px 0; }
+    .btn-full {
+      width: 100%;
+      background: var(--ink);
+      color: white; border: none; border-radius: 14px;
+      padding: 16px; font-family: 'Apple SD Gothic Neo', 'Noto Sans KR', sans-serif;
+      font-size: 16px; font-weight: 700;
+      cursor: pointer; transition: all .15s;
+      box-shadow: 3px 3px 0px #888;
+    }
+    .btn-full:hover { background: var(--accent); transform: translate(-1px,-1px); box-shadow: 4px 4px 0px #A83A20; }
+    .btn-full:active { background: var(--accent); transform: translate(1px,1px); box-shadow: 1px 1px 0px #A83A20; }
+    .btn-full:disabled {
+      opacity: .35; cursor: not-allowed;
+      transform: none; box-shadow: 2px 2px 0px #CCC;
+      background: #999;
+    }
+
+    /* ── 안내 화면 ── */
+    #screen-guide { background: var(--cream); }
+    .guide-body { flex: 1; padding: 26px 22px; overflow-y: auto; }
+    .guide-card {
+      background: white; border-radius: 18px;
+      padding: 20px 18px; margin-bottom: 14px;
+      box-shadow: 3px 3px 0px var(--border);
+      border: 1.5px solid var(--border);
+    }
+    .guide-card-title {
+      font-family: 'Nanum Pen Script', cursive;
+      font-size: 22px; color: var(--accent);
+      margin-bottom: 8px;
+    }
+    .guide-card p {
+      font-family: 'Apple SD Gothic Neo', 'Noto Sans KR', sans-serif;
+      font-size: 14px; color: #444; line-height: 1.85;
+    }
+    .guide-example {
+      margin-top: 16px;
+      display: flex; flex-wrap: wrap; gap: 8px;
+    }
+    .ex-btn {
+      border: 2px solid var(--border); border-radius: 50px;
+      background: white; color: #888;
+      font-family: 'Apple SD Gothic Neo', 'Noto Sans KR', sans-serif;
+      font-size: 13px; font-weight: 600;
+      padding: 7px 16px;
+    }
+    .ex-btn.ex-on {
+      background: var(--ink);
+      border-color: var(--ink);
+      color: white;
+    }
+    .guide-footer { padding: 16px 22px 0; }
+
+    /* ── 검사 화면 ── */
+    #screen-questions { background: var(--cream); }
+    .q-header {
+      background: white;
+      padding: 16px 22px 14px;
+      border-bottom: 1.5px solid var(--border);
+      position: sticky; top: 0; z-index: 10;
+    }
+    .q-header-top {
+      display: flex; justify-content: space-between; align-items: center;
+      margin-bottom: 10px;
+    }
+    .q-page-label {
+      font-family: 'Nanum Pen Script', cursive;
+      font-size: 20px; color: var(--ink-light);
+    }
+    .q-page-pct {
+      font-family: 'Gaegu', sans-serif;
+      font-size: 14px; font-weight: 700; color: var(--accent);
+    }
+    .progress-track {
+      height: 6px; background: #EEE8D8; border-radius: 3px;
+      overflow: hidden; margin-bottom: 12px;
+    }
+    .progress-fill {
+      height: 100%;
+      background: var(--ink);
+      border-radius: 3px;
+      transition: width .65s cubic-bezier(.4,0,.2,1);
+    }
+    .q-part-title {
+      font-family: 'Nanum Pen Script', cursive;
+      font-size: 22px; color: var(--ink);
+    }
+    .q-body { flex: 1; padding: 18px 18px 8px; overflow-y: auto; }
+    .q-instruction {
+      font-family: 'Apple SD Gothic Neo', 'Noto Sans KR', sans-serif;
+      font-size: 13px; color: var(--ink); line-height: 1.75;
+      margin-bottom: 16px;
+      background: #FFF7EC; border-radius: 14px;
+      padding: 12px 16px;
+      border: 1.5px dashed #E8C890;
+    }
+    .trait-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 9px;
+    }
+    .trait-btn {
+      border: 2px solid var(--border);
+      border-radius: 14px;
+      background: white;
+      color: var(--ink);
+      font-family: 'Apple SD Gothic Neo', 'Noto Sans KR', sans-serif;
+      font-size: 13px; font-weight: 600;
+      padding: 13px 10px;
+      cursor: pointer;
+      transition: all .15s;
+      text-align: center;
+      line-height: 1.4;
+      user-select: none;
+      box-shadow: 2px 2px 0px var(--border);
+    }
+    .trait-btn:hover {
+      border-color: #AAA;
+      transform: translate(-1px, -1px);
+      box-shadow: 3px 3px 0px #CCC;
+    }
+    .trait-btn:active { transform: translate(1px, 1px); box-shadow: none; }
+    .trait-btn.selected {
+      background: var(--ink);
+      border-color: var(--ink);
+      color: white;
+      box-shadow: 2px 2px 0px #444;
+    }
+    .q-counter {
+      text-align: center;
+      font-family: 'Apple SD Gothic Neo', 'Noto Sans KR', sans-serif;
+      font-size: 13px; color: var(--ink-light);
+      margin-top: 16px; margin-bottom: 4px;
+    }
+    .q-counter strong {
+      color: var(--accent);
+      font-size: 15px;
+    }
+    .q-footer {
+      padding: 12px 18px 32px;
+      background: white;
+      border-top: 1.5px solid var(--border);
+      display: flex; gap: 10px;
+    }
+    .btn-prev {
+      background: white; color: var(--ink-light);
+      border: 2px solid var(--border); border-radius: 50px;
+      padding: 13px 20px;
+      font-family: 'Apple SD Gothic Neo', 'Noto Sans KR', sans-serif;
+      font-size: 14px; font-weight: 600;
+      cursor: pointer; transition: all .15s;
+      white-space: nowrap;
+      box-shadow: 2px 2px 0px var(--border);
+    }
+    .btn-prev:hover { border-color: #AAA; color: var(--ink); }
+    .btn-next {
+      flex: 1;
+      background: var(--ink);
+      color: white; border: none; border-radius: 50px;
+      padding: 13px;
+      font-family: 'Apple SD Gothic Neo', 'Noto Sans KR', sans-serif;
+      font-size: 15px; font-weight: 700;
+      cursor: pointer; transition: all .15s;
+      box-shadow: 3px 3px 0px #555;
+    }
+    .btn-next:hover { transform: translate(-1px,-1px); box-shadow: 4px 4px 0px #555; }
+    .btn-next:active { transform: translate(1px,1px); box-shadow: none; }
+
+    /* ── 결과 화면 ── */
+    #screen-results { background: var(--cream); }
+
+    .r-header {
+      color: white;
+      padding: 52px 26px 40px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .r-header::before {
+      content: '';
+      position: absolute;
+      top: -50px; right: -50px;
+      width: 180px; height: 180px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.1);
+      pointer-events: none;
+    }
+    .r-emoji { font-size: 52px; margin-bottom: 10px; position: relative; z-index: 1; }
+    .r-type-en {
+      font-family: 'Gaegu', sans-serif;
+      font-size: 12px; opacity: .7; letter-spacing: 2px;
+      text-transform: uppercase; margin-bottom: 4px;
+      position: relative; z-index: 1;
+    }
+    .r-type-name {
+      font-family: 'Nanum Pen Script', cursive;
+      font-size: 44px; font-weight: 400;
+      line-height: 1.2; margin-bottom: 4px;
+      position: relative; z-index: 1;
+    }
+    .r-type-sub {
+      font-family: 'Gaegu', sans-serif;
+      font-size: 16px; opacity: .88; margin-bottom: 24px;
+      font-weight: 700;
+      position: relative; z-index: 1;
+    }
+    .r-type-desc {
+      font-family: 'Apple SD Gothic Neo', 'Noto Sans KR', sans-serif;
+      font-size: 13px; line-height: 1.9;
+      opacity: .93;
+      text-align: left;
+      background: rgba(255,255,255,0.15);
+      border-radius: 16px;
+      padding: 18px 16px;
+      position: relative; z-index: 1;
+    }
+
+    .r-body { padding: 24px 20px; }
+
+    .score-card {
+      background: white; border-radius: 18px;
+      padding: 22px; margin-bottom: 20px;
+      box-shadow: 3px 3px 0px var(--border);
+      border: 1.5px solid var(--border);
+    }
+    .score-card-title {
+      font-family: 'Nanum Pen Script', cursive;
+      font-size: 22px; color: var(--ink);
+      margin-bottom: 16px;
+    }
+    .sbar-row { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
+    .sbar-row:last-child { margin-bottom: 0; }
+    .sbar-label {
+      font-family: 'Apple SD Gothic Neo', 'Noto Sans KR', sans-serif;
+      font-size: 12px; color: var(--ink); font-weight: 700; width: 28px; flex-shrink: 0;
+    }
+    .sbar-track { flex: 1; height: 8px; background: #EEE8D8; border-radius: 4px; overflow: hidden; }
+    .sbar-fill { height: 100%; border-radius: 4px; width: 0; transition: width 1.1s ease; }
+    .sbar-val {
+      font-family: 'Apple SD Gothic Neo', 'Noto Sans KR', sans-serif;
+      font-size: 12px; font-weight: 700; color: var(--ink); width: 36px; text-align: right;
+    }
+
+    .sw-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-bottom: 24px;
+    }
+    .sw-card {
+      background: white; border-radius: 16px;
+      padding: 18px 14px;
+      box-shadow: 3px 3px 0px var(--border);
+      border: 1.5px solid var(--border);
+    }
+    .sw-title {
+      font-family: 'Nanum Pen Script', cursive;
+      font-size: 22px;
+      margin-bottom: 10px; padding-bottom: 8px;
+      border-bottom: 1.5px dashed var(--border);
+    }
+    .sw-title.strength { color: #2E7D32; }
+    .sw-title.weakness { color: #C62828; }
+    .sw-list { list-style: none; display: grid; gap: 7px; }
+    .sw-list li {
+      font-family: 'Apple SD Gothic Neo', 'Noto Sans KR', sans-serif;
+      font-size: 12px; line-height: 1.6; color: #444;
+      padding-left: 12px; position: relative;
+    }
+    .sw-list li::before { content: '✦'; position: absolute; left: 0; color: #D0C8B8; font-size: 8px; top: 3px; }
+
+    .tie-notice {
+      background: #FFFBEC;
+      border: 1.5px dashed #E8C890;
+      border-radius: 14px;
+      padding: 14px 16px;
+      font-family: 'Apple SD Gothic Neo', 'Noto Sans KR', sans-serif;
+      font-size: 13px; color: #7A5F20;
+      line-height: 1.75; font-weight: 700;
+      margin: 20px 20px 0;
+    }
+    .type-divider {
+      display: flex; align-items: center; gap: 12px;
+      margin: 28px 0 20px;
+    }
+    .type-divider-line { flex: 1; height: 1px; background: var(--border); }
+    .type-divider-text {
+      font-family: 'Nanum Pen Script', cursive;
+      font-size: 18px; color: #BBB; white-space: nowrap;
+    }
+
+    .r-footer { padding: 0 20px 52px; display: flex; flex-direction: column; gap: 10px; }
+    .btn-save {
+      width: 100%;
+      background: var(--ink); color: white;
+      border: none; border-radius: 14px; padding: 15px;
+      font-family: 'Apple SD Gothic Neo', 'Noto Sans KR', sans-serif;
+      font-size: 15px; font-weight: 700;
+      cursor: pointer; transition: all .15s;
+      box-shadow: 3px 3px 0px #555;
+    }
+    .btn-save:hover { background: var(--accent); box-shadow: 3px 3px 0px #A83A20; }
+    .btn-restart {
+      width: 100%;
+      background: white; color: var(--ink);
+      border: 2px solid var(--border);
+      border-radius: 14px; padding: 15px;
+      font-family: 'Apple SD Gothic Neo', 'Noto Sans KR', sans-serif;
+      font-size: 15px; font-weight: 700;
+      cursor: pointer; transition: all .15s;
+      box-shadow: 3px 3px 0px var(--border);
+    }
+    .btn-restart:hover {
+      background: var(--ink); color: white;
+      border-color: var(--ink);
+      box-shadow: 3px 3px 0px #555;
+    }
+
+    /* 유형별 색상 — 채도 낮게 */
+    .type-D { background: #C0392B; }
+    .type-P { background: #27AE60; }
+    .type-M { background: #2980B9; }
+    .type-S { background: #D4A017; }
+
+    .sbar-D { background: #C0392B; }
+    .sbar-P { background: #27AE60; }
+    .sbar-M { background: #2980B9; }
+    .sbar-S { background: #D4A017; }
+
+    @media (max-width: 360px) {
+      .r-type-name { font-size: 36px; }
+      .trait-btn { font-size: 13px; padding: 11px 8px; }
+      .start-pcsi { font-size: 52px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ════════════════════ 시작 화면 ════════════════════ -->
+<div id="screen-start" class="screen active">
+  <div class="start-sticker">💬</div>
+  <div class="start-pcsi">PCSI</div>
+  <div class="start-tag">나의 커뮤니케이션 스타일 찾기</div>
+  <div class="start-card">
+    <div class="start-card-label">잠깐, 읽어보아요 👀</div>
+    <div class="start-message">
+      사람마다 소통하는 방식이 달라요.<br>
+      나의 스타일을 알고,<br>
+      상대의 스타일을 이해할 때<br>
+      대화는 더 자연스러워지고,<br>
+      관계는 더 깊어집니다.<br><br>
+      먼저 나 자신을 발견하는 것에서<br>
+      시작해요!
+    </div>
+  </div>
+  <button class="btn-start" onclick="showScreen('info')">검사 시작하기 →</button>
+  <div class="copyright-start">
+    ⓒ 한국코칭센터 — 이 진단의 저작권은 (주)한국리더십센터그룹에 있습니다
+  </div>
+</div>
+
+<!-- ════════════════════ 정보 입력 화면 ════════════════════ -->
+<div id="screen-info" class="screen">
+  <div class="page-header">
+    <div class="page-header-title">기본 정보 입력</div>
+    <div class="page-header-sub">아래 항목을 모두 입력해야 다음으로 넘어갈 수 있어요</div>
+  </div>
+  <div class="info-body">
+    <div class="info-field">
+      <label class="info-label">🏫 학교 이름</label>
+      <input type="text" class="info-input" id="input-school" placeholder="학교 이름을 입력해 주세요" oninput="checkInfoComplete()" />
+    </div>
+    <div class="info-field">
+      <label class="info-label">📚 학년</label>
+      <div class="btn-group btn-group-grade" id="grade-group">
+        <button class="btn-select" onclick="selectGrade(1)">1학년</button>
+        <button class="btn-select" onclick="selectGrade(2)">2학년</button>
+        <button class="btn-select" onclick="selectGrade(3)">3학년</button>
+      </div>
+    </div>
+    <div class="info-field">
+      <label class="info-label">🚪 반</label>
+      <div class="btn-group btn-group-class" id="class-group">
+        <button class="btn-select" onclick="selectClass(1)">1반</button>
+        <button class="btn-select" onclick="selectClass(2)">2반</button>
+        <button class="btn-select" onclick="selectClass(3)">3반</button>
+        <button class="btn-select" onclick="selectClass(4)">4반</button>
+        <button class="btn-select" onclick="selectClass(5)">5반</button>
+        <button class="btn-select" onclick="selectClass(6)">6반</button>
+        <button class="btn-select" onclick="selectClass(7)">7반</button>
+        <button class="btn-select" onclick="selectClass(8)">8반</button>
+        <button class="btn-select" onclick="selectClass(9)">9반</button>
+        <button class="btn-select" onclick="selectClass(10)">10반</button>
+      </div>
+    </div>
+    <div class="info-field">
+      <label class="info-label">😊 이름</label>
+      <input type="text" class="info-input" id="input-name" placeholder="이름을 입력해 주세요" oninput="checkInfoComplete()" />
+    </div>
+  </div>
+  <div class="info-footer">
+    <button class="btn-full" id="btn-info-next" onclick="showScreen('guide')" disabled>다음으로 →</button>
+  </div>
+  <div class="copyright">ⓒ 한국코칭센터 — 이 진단의 저작권은 (주)한국리더십센터그룹에 있습니다</div>
+</div>
+
+<!-- ════════════════════ 안내 화면 ════════════════════ -->
+<div id="screen-guide" class="screen">
+  <div class="page-header">
+    <div class="page-header-title">진단 검사를 위한 안내사항</div>
+    <div class="page-header-sub">검사 방법을 확인하고 시작해요</div>
+  </div>
+  <div class="guide-body">
+    <div class="guide-card">
+      <div class="guide-card-title">📋 검사 방법</div>
+      <p>4개의 파트가 차례로 나와요.<br>각 파트에는 <strong>20개의 특성</strong>이 있어요.<br>나에게 해당된다고 생각하는 특성을 <strong>모두 골라봐요!</strong></p>
+    </div>
+    <div class="guide-card">
+      <div class="guide-card-title">👆 선택 방법</div>
+      <p>버튼을 <strong>터치(클릭)</strong>하면 선택돼요.<br>다시 터치하면 취소할 수 있어요.</p>
+      <div class="guide-example">
+        <div class="ex-btn">야심적이다</div>
+        <div class="ex-btn ex-on">결단력이 있다 ✓</div>
+        <div class="ex-btn">경쟁적이다</div>
+      </div>
+    </div>
+    <div class="guide-card">
+      <div class="guide-card-title">💡 꿀팁!</div>
+      <p>너무 오래 고민하지 말고 <strong>느낌대로</strong> 골라봐요!<br>약 <strong>5분</strong> 정도면 충분해요 😊</p>
+    </div>
+  </div>
+  <div class="guide-footer">
+    <button class="btn-full" onclick="startQuestions()">시작할게요!</button>
+  </div>
+  <div class="copyright">ⓒ 한국코칭센터 — 이 진단의 저작권은 (주)한국리더십센터그룹에 있습니다</div>
+</div>
+
+<!-- ════════════════════ 검사 화면 ════════════════════ -->
+<div id="screen-questions" class="screen">
+  <div class="q-header">
+    <div class="q-header-top">
+      <span class="q-page-label" id="page-label">Part 1 / 4</span>
+      <span class="q-page-pct" id="page-pct">25%</span>
+    </div>
+    <div class="progress-track">
+      <div class="progress-fill" id="progress-fill" style="width:25%"></div>
+    </div>
+  </div>
+  <div class="q-body">
+    <div class="q-instruction">
+      <strong>나에게 해당된다고 생각하는 특성을 <span style="color:var(--accent);">[모두]</span> 골라봐요 😊</strong><br>
+      몇 개를 골라도 괜찮아요!
+    </div>
+    <div class="trait-grid" id="trait-grid"></div>
+    <div class="q-counter" id="q-counter"><strong>0</strong>개 선택됨</div>
+  </div>
+  <div class="q-footer">
+    <button class="btn-prev" id="btn-prev" onclick="prevPage()">← 이전</button>
+    <button class="btn-next" id="btn-next" onclick="nextPage()">다음 →</button>
+  </div>
+</div>
+
+<!-- ════════════════════ 결과 화면 ════════════════════ -->
+<div id="screen-results" class="screen">
+  <div id="result-content"></div>
+  <div class="r-footer">
+    <button class="btn-save" id="btn-save" onclick="saveAsImage()">📷 결과 이미지 저장</button>
+    <button class="btn-restart" onclick="restart()">🔄 처음으로 돌아가기</button>
+  </div>
+  <div class="copyright">ⓒ 한국코칭센터 — 이 진단의 저작권은 (주)한국리더십센터그룹에 있습니다</div>
+</div>
+
+<script>
+const PARTS = [
+  {
+    title: 'Part 1',
+    traits: [
+      '야심적이다','속도가 빠르다','창조적이다','통제적이다','용기가 있다',
+      '결과지향적이다','고집이 세다','결단력이 있다','위험을 감수한다','경쟁적이다',
+      '밀어부친다','추진력이 있다','의지가 강하다','책임감이 강하다','독립적이다',
+      '가능성을 창출한다','쉽게 싫증을 낸다','리더이다','자신의 주장이 강하다','거침없이 말한다',
+    ],
+  },
+  {
+    title: 'Part 2',
+    traits: [
+      '생기 있다','큰그림을 중시한다','세부적인 것을 좋아하지 않는다','에너지가 넘친다','혁신적이다',
+      '설득력이 있다','자발적이다','외향적이다','의사소통을 잘한다','걱정이 없는 것처럼 보인다',
+      '파티 같은 재밌는 삶을 산다','사람을 좋아한다','자신에 차있다','유머감각이 있다','다양성을 선호한다',
+      '매력적이다','호기심이 많다','옳은 말을 한다','충동적이다','잘 웃는다',
+    ],
+  },
+  {
+    title: 'Part 3',
+    traits: [
+      '친절하다','규율을 중히 여긴다','신뢰를 쌓는다','감정이입을 잘한다','리더이다',
+      '중재자이다','유쾌하다','갈등을 싫어한다','주의깊다','다른 사람을 배려한다',
+      '지식이 많다','멘토역할을 잘한다','다른 사람의 욕구를 잘 파악한다','잘 이해한다','잘 참는다',
+      '까다롭지 않다','소극적이다','긍정적이다','협력적이다','객관적이다',
+    ],
+  },
+  {
+    title: 'Part 4',
+    traits: [
+      '지적이다','규칙을 잘 따른다','보수적이다','속마음을 잘 드러내지 않는다','협상을 잘한다',
+      '신중하다','높은 수준을 추구한다','모든 가능성을 고려한다','행동을 주저한다','정리 정돈된 것을 좋아한다',
+      '체계적이다','이상주의자이다','꼼꼼하고 정확하다','충성심이 강하다','완벽주의이다',
+      '자제력이 있다','세부지향적이다','일관성이 있다','철저하다','생각이나 행동이 잘 정리되어 있다',
+    ],
+  },
+];
+
+const TYPES = [
+  {
+    key: 'D', name: 'D형', en: 'Director', sub: '지시형',
+    emoji: '🦁',
+    colorClass: 'type-D', barClass: 'sbar-D',
+    desc: 'D형은 지배하기를 좋아합니다. 결과지향적이고 가능성을 생각하며, 새롭고 위험한 도전을 즐기며 신속하게 목표를 정하고 달성을 위해 열심히 노력합니다. D형에게는 지배하는 것이 가장 중요하며, 자주 리더로 선출됩니다. 경쟁에서 이기는 데 역점을 두며, 오랫동안 열심히 일합니다. 사람들은 D형이 추진력이 강하고, 좋은 리더의 자질이 있고, 단정적이고 거리낌이 없다고 말합니다.',
+    strengths: [
+      '생각과 행동의 속도가 빠르다','행동/결과에 초점을 맞춘다','성공에 필요한 일들을 한다',
+      '신속하게 결정할 수 있다','책임감이 있다','타고난 지도자이다',
+      '협상을 잘한다','말과 행동이 일치한다','비전과 큰 그림을 중시한다','대단히 창조적이다',
+    ],
+    weaknesses: [
+      '일처리가 느린 사람들을 용납하지 않는다','고독한 지도자이다',
+      '다른 사람들이 일하는 것을 믿지 못한다','잘 듣지 않고 결판을 선호한다',
+      '자신의 기준으로 재단한다','다른 사람들을 지배하려는 경향이 있다',
+      '다른 사람들에게 스트레스를 줄 수 있다',
+    ],
+  },
+  {
+    key: 'P', name: 'P형', en: 'Presenter', sub: '사교형',
+    emoji: '🐰',
+    colorClass: 'type-P', barClass: 'sbar-P',
+    desc: 'P형은 중요한 사람들을 모두 압니다. 언제든 어느 사람이건 어떤 주제에 관해서건 이야기하기를 좋아합니다. 생기 있고, 활력이 넘치고, 자발적이며 모든 일이 재미있기를 원합니다. 의사소통을 잘하고 설득력이 있습니다. P형은 다른 사람들에게 성공한 것처럼 보이며, 다양성을 좋아하고 호기심 많고 때때로 충동적입니다. 친화력이 있어서 사람들을 끌어당기며, 주목의 대상이 되는 것을 즐거워합니다.',
+    strengths: [
+      '항상 생기있고 활력이 넘친다','커뮤니케이션을 잘한다',
+      '다른 사람들에게 동기를 부여한다','아이디어 공장이다',
+      '새로운 프로젝트를 좋아한다','사교성이 좋고 타인의 생각을 잘 받아들인다',
+      '엄격하지 않다','직관적이고 사람들에게 동정적이다',
+    ],
+    weaknesses: [
+      '진지하지 못한 사람으로 받아들여질 수도 있다','일의 완수능력이 떨어진다',
+      '쉽게 싫증난다','지키지 못할 약속을 남발할 수 있다',
+      '듣기보다는 말한다','대화를 독점하려고 할 수도 있다',
+      '시간관리를 잘 못 한다',
+    ],
+  },
+  {
+    key: 'M', name: 'M형', en: 'Mediator', sub: '우호형',
+    emoji: '🐼',
+    colorClass: 'type-M', barClass: 'sbar-M',
+    desc: 'M형은 모든 사람들이 좋아합니다. 자기 분야의 전문가이며 그 때문에 사람들이 조언을 구합니다. 다른 사람들을 많이 도와주며, 그룹에 있는 모든 사람들이 편안함을 느끼게 해줍니다. M형 리더는 함께 일하는 사람들에게 신뢰감을 불어넣습니다. 참을성 있고, 철저하고, 포용력이 있습니다. M형 리더와 M형 직원이 팀을 이루면 한 번에 조금씩 움직여 결국 큰 변화를 만들어냅니다.',
+    strengths: [
+      '대화스타일이 부드럽고 포괄적이다','잘 경청하고 "알아듣는다"',
+      '전문가이다','모든 사람이 사랑한다',
+      '솔직하고 정직하다','올바른 평가를 통해 사람들을 격려한다',
+      '좋은 아이디어가 풍부하다','유머감각이 있다',
+    ],
+    weaknesses: [
+      '속마음을 잘 드러내지 않아서 파악이 어렵다','어려운 사람들 문제에는 잘 나서지 않는다',
+      '모험을 좋아하지 않는다','조화를 위해 발전을 포기할 수 있다',
+      '자발적으로 일하기보다는 정해진 일을 좋아한다','비판에 민감하다',
+      '문제의 양측면을 볼 수 있기 때문에 결정이 쉽지 않다',
+    ],
+  },
+  {
+    key: 'S', name: 'S형', en: 'Strategist', sub: '분석형',
+    emoji: '🦊',
+    colorClass: 'type-S', barClass: 'sbar-S',
+    desc: 'S형은 철저하고, 근면하고, 열심히 일하는 전략가입니다. 분석 전문가이고 문제해결사입니다. 규칙을 따르고 천천히 충분하게 생각하며 주변의 모든 것을 평가합니다. 잘못되는 것과 실수를 싫어합니다. 완벽주의 경향이 있지만 온갖 노력을 다했다는 것은 믿어도 좋습니다. 프로젝트에 중요한 전략적 행동에 초점을 맞추며, 일을 마칠 때까지 포기하지 않습니다.',
+    strengths: [
+      '사실을 알고나면 자신감을 갖는다','아주 철저하다',
+      '공정하고 편견이 없다','의사표현이 분명하다',
+      '계산된 모험을 한다','구조를 즐긴다',
+      '충분하게 생각하는 것을 좋아한다','다른 사람들의 의견을 신중하게 받아들인다',
+      '의사결정이 신중하다','업무추진에 빈틈이 없고 실행력이 좋다',
+    ],
+    weaknesses: [
+      '완벽주의로 포기가 어렵다','실수를 두려워하여 일처리에 시간이 걸린다',
+      '제 때에 결정을 내리기가 어렵다','변화를 기피한다',
+      '비판적 경향이 있다','걱정이 많다',
+      '행동이 느리다','과거를 놓지 않고, 새것의 수용이 늦다',
+    ],
+  },
+];
+
+const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzyVZQFcDHqhJIn8N3LVJOywJIhuKIGBUCK71jLdsVQjm-pRe2BaIn94lzyi7aoBs8/exec';
+
+let studentInfo = { school: '', grade: null, classNum: null, name: '' };
+let selections = [new Set(), new Set(), new Set(), new Set()];
+let currentPage = 0;
+
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById('screen-' + id).classList.add('active');
+  window.scrollTo(0, 0);
+}
+
+function selectGrade(g) {
+  studentInfo.grade = g;
+  document.querySelectorAll('#grade-group .btn-select').forEach((b, i) => {
+    b.classList.toggle('selected', i + 1 === g);
+  });
+  checkInfoComplete();
+}
+
+function selectClass(c) {
+  studentInfo.classNum = c;
+  document.querySelectorAll('#class-group .btn-select').forEach((b, i) => {
+    b.classList.toggle('selected', i + 1 === c);
+  });
+  checkInfoComplete();
+}
+
+function checkInfoComplete() {
+  studentInfo.school = document.getElementById('input-school').value.trim();
+  studentInfo.name = document.getElementById('input-name').value.trim();
+  const ok = studentInfo.school && studentInfo.grade && studentInfo.classNum && studentInfo.name;
+  document.getElementById('btn-info-next').disabled = !ok;
+}
+
+function startQuestions() {
+  selections = [new Set(), new Set(), new Set(), new Set()];
+  currentPage = 0;
+  renderPage();
+  showScreen('questions');
+}
+
+function renderPage() {
+  const p = currentPage;
+  const pct = (p + 1) * 25;
+  document.getElementById('page-label').textContent = `Part ${p + 1}`;
+  document.getElementById('page-pct').textContent = pct + '%';
+  document.getElementById('progress-fill').style.width = pct + '%';
+  document.getElementById('btn-next').textContent = p === 3 ? '결과 보기' : '다음 →';
+
+  const grid = document.getElementById('trait-grid');
+  grid.innerHTML = '';
+  PARTS[p].traits.forEach((trait, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'trait-btn' + (selections[p].has(i) ? ' selected' : '');
+    btn.textContent = trait;
+    btn.onclick = () => toggleTrait(p, i, btn);
+    grid.appendChild(btn);
+  });
+  updateCounter(p);
+}
+
+function toggleTrait(partIdx, traitIdx, btn) {
+  if (selections[partIdx].has(traitIdx)) {
+    selections[partIdx].delete(traitIdx);
+    btn.classList.remove('selected');
+  } else {
+    selections[partIdx].add(traitIdx);
+    btn.classList.add('selected');
+  }
+  updateCounter(partIdx);
+}
+
+function updateCounter(p) {
+  const n = selections[p].size;
+  document.getElementById('q-counter').innerHTML = `<strong>${n}</strong>개 선택됨`;
+}
+
+function prevPage() {
+  if (currentPage === 0) {
+    showScreen('guide');
+  } else {
+    currentPage--;
+    renderPage();
+    window.scrollTo(0, 0);
+  }
+}
+
+function nextPage() {
+  if (currentPage < 3) {
+    currentPage++;
+    renderPage();
+    window.scrollTo(0, 0);
+  } else {
+    showResults();
+  }
+}
+
+function showResults() {
+  const scores = selections.map(s => s.size);
+  const maxScore = Math.max(...scores);
+  const topIndices = scores.map((s, i) => ({ s, i })).filter(x => x.s === maxScore).map(x => x.i);
+  const isTie = topIndices.length > 1;
+
+  const container = document.getElementById('result-content');
+  container.innerHTML = '';
+
+  if (isTie) {
+    const notice = document.createElement('div');
+    notice.className = 'tie-notice';
+    const names = topIndices.map(i => TYPES[i].name + ' ' + TYPES[i].sub).join(', ');
+    notice.innerHTML = `🎭 <strong>${names}</strong>이(가) 동일하게 높게 나타났어요!<br>두 유형의 특성을 함께 가지고 있답니다 😊`;
+    container.appendChild(notice);
+  }
+
+  const ordinals = ['첫 번째', '두 번째', '세 번째', '네 번째'];
+
+  topIndices.forEach((typeIdx, n) => {
+    const type = TYPES[typeIdx];
+
+    if (isTie) {
+      const divider = document.createElement('div');
+      divider.className = 'type-divider';
+      divider.style.margin = n === 0 ? '20px 20px 0' : '28px 20px 0';
+      divider.innerHTML = `
+        <div class="type-divider-line"></div>
+        <div class="type-divider-text">${ordinals[n]} 유형</div>
+        <div class="type-divider-line"></div>
+      `;
+      container.appendChild(divider);
+    }
+
+    const header = document.createElement('div');
+    header.className = `r-header ${type.colorClass}`;
+    header.innerHTML = `
+      <div class="r-emoji">${type.emoji}</div>
+      <div class="r-type-en">${type.en}</div>
+      <div class="r-type-name">${type.name} · ${type.sub}</div>
+      <div class="r-type-desc">${type.desc}</div>
+    `;
+    container.appendChild(header);
+
+    const body = document.createElement('div');
+    body.className = 'r-body';
+
+    const scoreCard = document.createElement('div');
+    scoreCard.className = 'score-card';
+    const sortedByScore = scores
+      .map((s, i) => ({ s, i }))
+      .sort((a, b) => b.s - a.s);
+    scoreCard.innerHTML = `
+      <div class="score-card-title">파트별 선택 수</div>
+      ${sortedByScore.map(({ s, i }) => `
+        <div class="sbar-row">
+          <div class="sbar-label">${TYPES[i].key}형</div>
+          <div class="sbar-track">
+            <div class="sbar-fill ${TYPES[i].barClass}" data-pct="${(s / 20 * 100).toFixed(0)}"></div>
+          </div>
+          <div class="sbar-val">${s}<span style="color:#CCC;font-weight:400">/20</span></div>
+        </div>
+      `).join('')}
+    `;
+    body.appendChild(scoreCard);
+
+    const swGrid = document.createElement('div');
+    swGrid.className = 'sw-grid';
+    swGrid.innerHTML = `
+      <div class="sw-card">
+        <div class="sw-title strength">✅ 강점</div>
+        <ul class="sw-list">
+          ${type.strengths.map(s => `<li>${s}</li>`).join('')}
+        </ul>
+      </div>
+      <div class="sw-card">
+        <div class="sw-title weakness">⚠️ 약점</div>
+        <ul class="sw-list">
+          ${type.weaknesses.map(w => `<li>${w}</li>`).join('')}
+        </ul>
+      </div>
+    `;
+    body.appendChild(swGrid);
+
+
+    container.appendChild(body);
+  });
+
+  showScreen('results');
+
+  setTimeout(() => {
+    document.querySelectorAll('.sbar-fill').forEach(el => {
+      el.style.width = el.dataset.pct + '%';
+    });
+  }, 200);
+
+  const topTypeLabel = topIndices.map(i => TYPES[i].name + ' ' + TYPES[i].sub).join(', ');
+  submitToSheets(topTypeLabel, scores);
+}
+
+function submitToSheets(topType, scores) {
+  const keywords = selections.map((sel, partIdx) =>
+    [...sel].map(i => PARTS[partIdx].traits[i]).join(', ')
+  );
+
+  const payload = {
+    school: studentInfo.school,
+    grade: studentInfo.grade,
+    classNum: studentInfo.classNum,
+    name: studentInfo.name,
+    topType,
+    score0: scores[0], score1: scores[1], score2: scores[2], score3: scores[3],
+    keywords0: keywords[0], keywords1: keywords[1], keywords2: keywords[2], keywords3: keywords[3],
+  };
+
+  fetch(SCRIPT_URL, {
+    method: 'POST',
+    mode: 'no-cors',
+    headers: { 'Content-Type': 'text/plain' },
+    body: JSON.stringify(payload),
+  }).catch(() => {});
+}
+
+function saveAsImage() {
+  const btn = document.getElementById('btn-save');
+  btn.textContent = '저장 중...';
+  btn.disabled = true;
+
+  const target = document.getElementById('screen-results');
+  html2canvas(target, {
+    scale: 2,
+    useCORS: true,
+    backgroundColor: '#F9F7FF',
+    scrollY: 0,
+    windowHeight: target.scrollHeight,
+    height: target.scrollHeight,
+  }).then(canvas => {
+    const link = document.createElement('a');
+    link.download = 'PCSI결과.png';
+    link.href = canvas.toDataURL('image/png');
+    link.click();
+    btn.textContent = '📷 결과 이미지 저장';
+    btn.disabled = false;
+  }).catch(() => {
+    btn.textContent = '📷 결과 이미지 저장';
+    btn.disabled = false;
+  });
+}
+
+function restart() {
+  showScreen('start');
+}
+</script>
+</body>
+</html>
