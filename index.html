@@ -131,19 +131,22 @@
       font-family: 'Gaegu', sans-serif;
       font-size: 18px; font-weight: 700;
       cursor: pointer;
-      transition: transform .2s, box-shadow .2s;
+      transition: background .12s, transform .12s, box-shadow .12s;
       position: relative; z-index: 1;
       box-shadow: 3px 3px 0px #999;
+      touch-action: manipulation;
+      user-select: none; -webkit-user-select: none;
+      -webkit-tap-highlight-color: transparent;
     }
     .btn-start:hover {
       background: var(--accent);
       transform: translate(-1px, -1px);
       box-shadow: 4px 4px 0px #A83A20;
     }
-    .btn-start:active {
-      background: var(--accent);
-      transform: translate(1px, 1px);
-      box-shadow: 1px 1px 0px #A83A20;
+    .btn-start:active, .btn-start.pressed {
+      background: var(--accent) !important;
+      transform: translate(1px, 1px) !important;
+      box-shadow: 1px 1px 0px #A83A20 !important;
     }
     .copyright-start {
       position: relative; z-index: 1;
@@ -231,11 +234,14 @@
       color: white; border: none; border-radius: 14px;
       padding: 16px; font-family: 'Apple SD Gothic Neo', 'Noto Sans KR', sans-serif;
       font-size: 16px; font-weight: 700;
-      cursor: pointer; transition: all .15s;
+      cursor: pointer; transition: background .12s, box-shadow .12s, transform .12s;
       box-shadow: 3px 3px 0px #888;
+      touch-action: manipulation;
+      user-select: none; -webkit-user-select: none;
+      -webkit-tap-highlight-color: transparent;
     }
     .btn-full:hover { background: var(--accent); transform: translate(-1px,-1px); box-shadow: 4px 4px 0px #A83A20; }
-    .btn-full:active { background: var(--accent); transform: translate(1px,1px); box-shadow: 1px 1px 0px #A83A20; }
+    .btn-full:active, .btn-full.pressed { background: var(--accent) !important; transform: translate(1px,1px) !important; box-shadow: 1px 1px 0px #A83A20 !important; }
     .btn-full:disabled {
       opacity: .35; cursor: not-allowed;
       transform: none; box-shadow: 2px 2px 0px #CCC;
@@ -375,9 +381,12 @@
       padding: 13px 20px;
       font-family: 'Apple SD Gothic Neo', 'Noto Sans KR', sans-serif;
       font-size: 14px; font-weight: 600;
-      cursor: pointer; transition: all .15s;
+      cursor: pointer; transition: all .12s;
       white-space: nowrap;
       box-shadow: 2px 2px 0px var(--border);
+      touch-action: manipulation;
+      user-select: none; -webkit-user-select: none;
+      -webkit-tap-highlight-color: transparent;
     }
     .btn-prev:hover { border-color: #AAA; color: var(--ink); }
     .btn-next {
@@ -387,11 +396,14 @@
       padding: 13px;
       font-family: 'Apple SD Gothic Neo', 'Noto Sans KR', sans-serif;
       font-size: 15px; font-weight: 700;
-      cursor: pointer; transition: all .15s;
+      cursor: pointer; transition: background .12s, box-shadow .12s, transform .12s;
       box-shadow: 3px 3px 0px #555;
+      touch-action: manipulation;
+      user-select: none; -webkit-user-select: none;
+      -webkit-tap-highlight-color: transparent;
     }
     .btn-next:hover { transform: translate(-1px,-1px); box-shadow: 4px 4px 0px #555; }
-    .btn-next:active { transform: translate(1px,1px); box-shadow: none; }
+    .btn-next:active, .btn-next.pressed { background: var(--accent) !important; transform: translate(1px,1px) !important; box-shadow: 1px 1px 0px #A83A20 !important; }
 
     /* ── 결과 화면 ── */
     #screen-results { background: var(--cream); }
@@ -626,7 +638,7 @@
     </div>
   </div>
   <div class="info-footer">
-    <button class="btn-full" id="btn-info-next" onclick="showScreen('guide')" disabled>다음으로 →</button>
+    <button class="btn-full" id="btn-info-next" onclick="pressAndGo(this, () => showScreen('guide'))" disabled>다음으로 →</button>
   </div>
   <div class="copyright">ⓒ 한국코칭센터 — 이 진단의 저작권은 (주)한국리더십센터그룹에 있습니다</div>
 </div>
@@ -657,7 +669,7 @@
     </div>
   </div>
   <div class="guide-footer">
-    <button class="btn-full" onclick="startQuestions()">시작할게요!</button>
+    <button class="btn-full" onclick="pressAndGo(this, startQuestions)">시작할게요!</button>
   </div>
   <div class="copyright">ⓒ 한국코칭센터 — 이 진단의 저작권은 (주)한국리더십센터그룹에 있습니다</div>
 </div>
@@ -683,7 +695,7 @@
   </div>
   <div class="q-footer">
     <button class="btn-prev" id="btn-prev" onclick="prevPage()">← 이전</button>
-    <button class="btn-next" id="btn-next" onclick="nextPage()">다음 →</button>
+    <button class="btn-next" id="btn-next" onclick="pressAndGo(this, nextPage)">다음 →</button>
   </div>
 </div>
 
@@ -1075,6 +1087,17 @@ function saveAsImage() {
 
 function restart() {
   showScreen('start');
+}
+
+// 버튼 누름 → 액센트 색 플래시 후 화면 전환 (모바일 즉각 반응)
+function pressAndGo(btn, fn) {
+  btn.classList.add('pressed');
+  btn.disabled = true;
+  setTimeout(() => {
+    btn.classList.remove('pressed');
+    btn.disabled = false;
+    fn();
+  }, 160);
 }
 </script>
 </body>
