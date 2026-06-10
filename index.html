@@ -285,7 +285,12 @@
     .guide-footer { padding: 16px 22px 0; }
 
     /* ── 검사 화면 ── */
-    #screen-questions { background: var(--cream); }
+    #screen-questions {
+      background: var(--cream);
+      height: 100vh;
+      height: 100dvh; /* 모바일 주소창 포함 실제 뷰포트 높이 */
+      overflow: hidden; /* 내부 스크롤만 허용 */
+    }
     .q-header {
       background: white;
       padding: 16px 22px 14px;
@@ -1050,14 +1055,13 @@ function saveAsImage() {
   btn.textContent = '저장 중...';
   btn.disabled = true;
 
-  const target = document.getElementById('screen-results');
+  const target = document.getElementById('result-content');
   html2canvas(target, {
-    scale: 2,
+    scale: 1.5,
     useCORS: true,
-    backgroundColor: '#F9F7FF',
-    scrollY: 0,
-    windowHeight: target.scrollHeight,
-    height: target.scrollHeight,
+    backgroundColor: null,
+    scrollY: -window.scrollY,
+    windowWidth: document.documentElement.clientWidth,
   }).then(canvas => {
     canvas.toBlob(blob => {
       const file = new File([blob], 'PCSI결과.png', { type: 'image/png' });
