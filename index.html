@@ -880,6 +880,8 @@ function renderPage() {
 
   const grid = document.getElementById('trait-grid');
   grid.innerHTML = '';
+  grid.style.pointerEvents = 'none';
+  setTimeout(() => { grid.style.pointerEvents = ''; }, 400);
   PARTS[p].traits.forEach((trait, i) => {
     const btn = document.createElement('button');
     btn.className = 'trait-btn' + (selections[p].has(i) ? ' selected' : '');
@@ -912,7 +914,10 @@ function prevPage() {
   } else {
     currentPage--;
     renderPage();
-    document.getElementById('q-body')?.scrollTo(0, 0); window.scrollTo(0, 0);
+    requestAnimationFrame(() => {
+      document.getElementById('q-body')?.scrollTo({ top: 0, behavior: 'instant' });
+      window.scrollTo(0, 0);
+    });
   }
 }
 
@@ -920,7 +925,10 @@ function nextPage() {
   if (currentPage < 3) {
     currentPage++;
     renderPage();
-    document.getElementById('q-body')?.scrollTo(0, 0); window.scrollTo(0, 0);
+    requestAnimationFrame(() => {
+      document.getElementById('q-body')?.scrollTo({ top: 0, behavior: 'instant' });
+      window.scrollTo(0, 0);
+    });
   } else {
     showResults();
   }
