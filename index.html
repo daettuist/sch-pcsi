@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>PCSI 나의 소통 스타일 찾기</title>
   <link href="https://fonts.googleapis.com/css2?family=Gaegu:wght@300;400;700&family=Nanum+Pen+Script&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -1050,39 +1051,29 @@ function submitToSheets(topType, scores) {
 }
 
 function saveAsImage() {
-  const content = document.getElementById('result-content').innerHTML;
-  const styles = Array.from(document.querySelectorAll('style, link[rel="stylesheet"]'))
-    .map(el => el.outerHTML).join('\n');
+  const btn = document.getElementById('btn-save');
+  btn.textContent = '저장 중...';
+  btn.disabled = true;
 
-  const html = `<!DOCTYPE html>
-<html lang="ko">
-<head>
-  <meta charset="UTF-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>PCSI 결과</title>
-  ${styles}
-  <style>
-    body { margin: 0; background: #FFFBF2; }
-    .save-tip {
-      text-align: center;
-      padding: 14px 20px;
-      font-family: 'Apple SD Gothic Neo', sans-serif;
-      font-size: 13px;
-      color: #888;
-      border-top: 1px solid #E8E0D0;
-      margin-top: 8px;
-    }
-  </style>
-</head>
-<body>
-  ${content}
-  <p class="save-tip">📱 화면을 길게 눌러 이미지를 저장하거나 스크린샷을 찍어주세요</p>
-</body>
-</html>`;
-
-  const blob = new Blob([html], { type: 'text/html' });
-  const url = URL.createObjectURL(blob);
-  window.open(url, '_blank');
+  const target = document.getElementById('screen-results');
+  html2canvas(target, {
+    scale: 2,
+    useCORS: true,
+    backgroundColor: '#FFFBF2',
+    scrollY: 0,
+    windowHeight: target.scrollHeight,
+    height: target.scrollHeight,
+  }).then(canvas => {
+    const link = document.createElement('a');
+    link.download = 'PCSI결과.png';
+    link.href = canvas.toDataURL('image/png');
+    link.click();
+    btn.textContent = '📷 결과 이미지 저장';
+    btn.disabled = false;
+  }).catch(() => {
+    btn.textContent = '📷 결과 이미지 저장';
+    btn.disabled = false;
+  });
 }
 
 function restart() {
