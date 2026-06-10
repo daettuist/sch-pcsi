@@ -287,9 +287,6 @@
     /* ── 검사 화면 ── */
     #screen-questions {
       background: var(--cream);
-      height: 100vh;
-      height: 100dvh; /* 모바일 주소창 포함 실제 뷰포트 높이 */
-      overflow: hidden; /* 내부 스크롤만 허용 */
     }
     .q-header {
       background: white;
@@ -379,6 +376,9 @@
       background: white;
       border-top: 1.5px solid var(--border);
       display: flex; gap: 10px;
+      position: sticky;
+      bottom: 0;
+      z-index: 10;
     }
     .btn-prev {
       background: white; color: var(--ink-light);
