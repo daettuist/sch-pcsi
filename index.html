@@ -518,6 +518,43 @@
     }
 
     .r-footer { padding: 0 16px 32px; display: flex; flex-direction: column; gap: 10px; }
+    /* 저장 상태 배너 */
+    .save-status {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin: 16px 16px 0;
+      padding: 14px 16px;
+      border-radius: 12px;
+      font-size: 14px;
+      font-weight: 600;
+      transition: all 0.4s ease;
+    }
+    .save-status.saving {
+      background: #FFF8E1;
+      border: 1.5px solid #FFD54F;
+      color: #7A5C00;
+    }
+    .save-status.success {
+      background: #E8F5E9;
+      border: 1.5px solid #66BB6A;
+      color: #1B5E20;
+    }
+    .save-status.retrying {
+      background: #FFF3E0;
+      border: 1.5px solid #FFA726;
+      color: #7A3B00;
+    }
+    .save-status.failed {
+      background: #FFEBEE;
+      border: 1.5px solid #EF5350;
+      color: #7A0000;
+    }
+    .save-status-icon { font-size: 18px; flex-shrink: 0; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .save-status.saving .save-status-icon,
+    .save-status.retrying .save-status-icon { display: inline-block; animation: spin 1.2s linear infinite; }
+
     .btn-save {
       width: 100%;
       background: var(--ink); color: white;
@@ -690,6 +727,10 @@
 
 <!-- ════════════════════ 결과 화면 ════════════════════ -->
 <div id="screen-results" class="screen">
+  <div id="save-status" class="save-status saving">
+    <span class="save-status-icon">⏳</span>
+    <span class="save-status-text">결과를 저장하고 있어요. 잠깐만 기다려 주세요!</span>
+  </div>
   <div id="result-content"></div>
   <div class="r-footer">
     <button class="btn-save" id="btn-save" onclick="saveAsImage()">📷 결과 화면 보기</button>
@@ -1028,12 +1069,49 @@ function submitToSheets(topType, scores) {
     keywords0: keywords[0], keywords1: keywords[1], keywords2: keywords[2], keywords3: keywords[3],
   };
 
-  fetch(SCRIPT_URL, {
-    method: 'POST',
-    mode: 'no-cors',
-    headers: { 'Content-Type': 'text/plain' },
-    body: JSON.stringify(payload),
-  }).catch(() => {});
+  const MAX_RETRIES = 4;
+  const RETRY_DELAYS = [3000, 6000, 12000, 20000];
+
+  function setSaveStatus(state, text) {
+    const el = document.getElementById('save-status');
+    if (!el) return;
+    el.className = 'save-status ' + state;
+    const icons = { saving: '⏳', retrying: '🔄', success: '✅', failed: '❌' };
+    el.innerHTML = `<span class="save-status-icon">${icons[state]}</span><span class="save-status-text">${text}</span>`;
+  }
+
+  function attemptSave(attempt) {
+    if (attempt > 0) {
+      setSaveStatus('retrying', `저장 재시도 중... (${attempt}/${MAX_RETRIES}회)`);
+    }
+
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 8000);
+
+    fetch(SCRIPT_URL, {
+      method: 'POST',
+      mode: 'no-cors',
+      headers: { 'Content-Type': 'text/plain' },
+      body: JSON.stringify(payload),
+      signal: controller.signal,
+    })
+      .then(() => {
+        clearTimeout(timeout);
+        setSaveStatus('success', '✔ 결과가 저장되었어요! 이제 화면을 캡처해도 좋아요 😊');
+      })
+      .catch(() => {
+        clearTimeout(timeout);
+        if (attempt < MAX_RETRIES) {
+          const wait = RETRY_DELAYS[attempt] / 1000;
+          setSaveStatus('retrying', `저장 재시도 중... (${attempt + 1}/${MAX_RETRIES}회) — ${wait}초 후 재시도`);
+          setTimeout(() => attemptSave(attempt + 1), RETRY_DELAYS[attempt]);
+        } else {
+          setSaveStatus('failed', '저장에 실패했어요. 선생님께 알려주세요.');
+        }
+      });
+  }
+
+  attemptSave(0);
 }
 
 function saveAsImage() {
